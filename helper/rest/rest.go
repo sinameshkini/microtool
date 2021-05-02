@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
+	netUrl "net/url"
 	"github.com/spf13/viper"
 )
 
