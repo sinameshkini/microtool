@@ -12,6 +12,7 @@ type PID int64
 
 // NilPID Null Primary ID
 var NilPID = PID(0)
+
 // NullPID can be used with the standard sql package to represent a
 // UUID value that can be NULL in the database
 type NullPID struct {
@@ -50,6 +51,14 @@ func (id *PID) Scan(src interface{}) error {
 	*id = PID(src.(int64))
 
 	return nil
+}
+
+func (id PID) IsValid() bool {
+	if int64(id) > 0 {
+		return true
+	}
+
+	return false
 }
 
 // ParsePID , parses a string id to a PID one
@@ -105,6 +114,7 @@ func (u NullPID) Value() (driver.Value, error) {
 	// Delegate to int64 Value function
 	return u.PID.Value()
 }
+
 // Scan implements the sql.Scanner interface.
 func (u *NullPID) Scan(src interface{}) error {
 	if src == nil {
@@ -140,6 +150,3 @@ func (u *NullPID) UnmarshalJSON(data []byte) error {
 	}
 	return nil
 }
-
-
-
