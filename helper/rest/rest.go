@@ -3,17 +3,17 @@ package rest
 import (
 	"bytes"
 	"fmt"
+	"github.com/spf13/viper"
 	"io"
 	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
+	netUrl "net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
-	netUrl "net/url"
-	"github.com/spf13/viper"
 )
 
 type Api struct {
