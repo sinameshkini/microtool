@@ -67,7 +67,6 @@ type HttpResponse struct {
 
 func (a *Api) Get(reqUrl string) (response *HttpResponse, err error) {
 	var (
-		reqUrl      string
 		resp     *http.Response
 		respBody []byte
 		httpReq  *http.Request
