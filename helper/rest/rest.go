@@ -9,7 +9,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
-	netUrl "net/url"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -67,20 +67,20 @@ type HttpResponse struct {
 
 func (a *Api) Get(reqUrl string) (response *HttpResponse, err error) {
 	var (
-		url      string
+		reqUrl      string
 		resp     *http.Response
 		respBody []byte
 		httpReq  *http.Request
 	)
 
-	url = a.Url + reqUrl
+	reqUrl = a.Url + reqUrl
 
-	if httpReq, err = http.NewRequest("GET", url, nil); err != nil {
+	if httpReq, err = http.NewRequest("GET", reqUrl, nil); err != nil {
 		return nil, err
 	}
 
 	httpReq.Header.Add("Authorization", a.accessToken)
-	httpReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	httpReq.Header.Add("Content-Type", "application/x-www-form-reqUrlencoded")
 	//httpReq.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	httpReq.Header.Add("Accept", "application/json")
 	client := &http.Client{}
@@ -101,7 +101,7 @@ func (a *Api) Get(reqUrl string) (response *HttpResponse, err error) {
 
 	if viper.GetBool("debug") {
 		fmt.Println("__________________ Get Request To: ________________________")
-		fmt.Println(url)
+		fmt.Println(reqUrl)
 		fmt.Println("__________________ Response: ________________________")
 		fmt.Println("status code: ", response.StatusCode)
 		fmt.Println("status: ", response.Status)
@@ -116,22 +116,22 @@ func (a *Api) Post(req map[string]string, methodPath string) (response *HttpResp
 		httpReq  *http.Request
 		resp     *http.Response
 		respBody []byte
-		url      string
+		reqUrl      string
 	)
 
-	url = a.Url + methodPath
-	data := netUrl.Values{}
+	reqUrl = a.Url + methodPath
+	data := url.Values{}
 	for key, param := range req {
 		data.Set(key, param)
 	}
 
-	httpReq, err = http.NewRequest("POST", url, strings.NewReader(data.Encode()))
+	httpReq, err = http.NewRequest("POST", reqUrl, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, err
 	}
 
 	httpReq.Header.Add("Authorization", a.accessToken)
-	httpReq.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	httpReq.Header.Add("Content-Type", "application/x-www-form-reqUrlencoded")
 	httpReq.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	httpReq.Header.Add("Accept", "application/json")
 	client := &http.Client{}
@@ -153,7 +153,7 @@ func (a *Api) Post(req map[string]string, methodPath string) (response *HttpResp
 
 	if viper.GetBool("debug") {
 		fmt.Println("__________________ Post Request To: ________________________")
-		fmt.Println(url)
+		fmt.Println(reqUrl)
 		fmt.Println(req)
 		fmt.Println("__________________ Response: ________________________")
 		fmt.Println("status code: ", response.StatusCode)
@@ -164,7 +164,7 @@ func (a *Api) Post(req map[string]string, methodPath string) (response *HttpResp
 	return response, nil
 }
 
-func (a *Api) PostFile(url string, relativePath string) (response *HttpResponse, err error) {
+func (a *Api) PostFile(reqUrl string, relativePath string) (response *HttpResponse, err error) {
 	var (
 		method   = "POST"
 		payload  = &bytes.Buffer{}
@@ -194,7 +194,7 @@ func (a *Api) PostFile(url string, relativePath string) (response *HttpResponse,
 		return nil, err
 	}
 
-	req, err = http.NewRequest(method, url, payload)
+	req, err = http.NewRequest(method, reqUrl, payload)
 
 	if err != nil {
 		return nil, err
@@ -220,7 +220,7 @@ func (a *Api) PostFile(url string, relativePath string) (response *HttpResponse,
 
 	if viper.GetBool("debug") {
 		fmt.Println("__________________ Post Request To: ________________________")
-		fmt.Println(url)
+		fmt.Println(reqUrl)
 		fmt.Println(req)
 		fmt.Println("__________________ Response: ________________________")
 		fmt.Println("status code: ", response.StatusCode)
